@@ -14,19 +14,20 @@ const app = express()
 // Configurar cors
 
 app.use(cors())
+// Parseo del body
+app.use(express.json())
 
 // Base de datos
 
 dbConnection()
 
 
-app.get( '/', (req, res) => {
+// Rutas
 
-    res.json({
-        ok: true,
-        msg: "Hola mundo"
-    })
-})
+app.use( '/api/usuarios', require('./routes/usuarios'))
+app.use( '/api/login', require('./routes/auth'))
+
+
 
 
 app.listen(process.env.PORT, () => {
