@@ -5,10 +5,33 @@ const { generarJWT } = require("../helpers/jwt");
 
 const getUsuarios = async (req, res) => {
 
-    const usuarios = await Usuario.find()
+    // con || lo que le decimos es que si el req es null, undef o Nan, que sea 0
+    const desde = Number(req.query.desde) || 0
+
+    // const usuarios = await Usuario.find()
+    //                               .skip( desde )
+    //                               .limit( 5 )
+
+    // const totalRegistros = await Usuario.count()
+
+    // Vamos a hacerlo un poco más eficiente que como está arriba, para que no haga un proceso y luego
+    // otro, que puede tardar mucho, vamos a lanzar las dos llamadas asíncronas a la vez, y hasta que no 
+    // acaben las dos, no avanza. Arriba, lanza una y espera a que acabe y luego lanza la otra.
+
+    const [usuarios, totalRegistros] = await Promise.all([
+
+        Usuario.find()
+               .skip( desde )
+               .limit( 5 ),
+
+    
+        Usuario.countDocuments()
+    ])
+
     res.json({
         ok: true,
-        usuarios
+        usuarios,
+        total: totalRegistros
     })
 }
 
@@ -30,7 +53,6 @@ const postUsuarios = async (req, res) => {
 
         // Generamos un string aleatorio
         const salt = bcrypt.genSaltSync()
-        console.log(salt);
         // Junto con el salt, hacemos el hash completo de la contraseña teniendo en cuenta la pass del
         // usuario
         usuario.password = bcrypt.hashSync(req.body.password, salt)

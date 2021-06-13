@@ -15,19 +15,20 @@ const validarJWT = (req, res, next) => {
     try {
 
         // Si esto funciona, me acabaría devolviendo el id del usuario, lo saca del token.
-        const { _id } = jwt.verify(token, process.env.JWT_SECRET)
+        const { uid } = jwt.verify(token, process.env.JWT_SECRET)
 
-        req._id = _id
+        req.uid = uid
+
+        
         next()
         
     } catch (error) {
-        res.status(401).json({
+        return res.status(401).json({
             ok: false,
             msg: 'Token incorrecto'
         })
     }
 
-    next()
 }
 
 module.exports = {
