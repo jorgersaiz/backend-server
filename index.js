@@ -21,6 +21,11 @@ app.use(express.json())
 
 dbConnection()
 
+// Directorio público: Con esto, lo que hacemos es crear una página web estática que se ejecuta en el
+// mismo servidor que el back end
+
+app.use(express.static('public'))
+
 
 // Rutas
 
