@@ -24,14 +24,16 @@ router.post( '/',
     postHospitales 
 )
 
-router.put( '/', 
+router.put( '/:id', 
     [
-        
-    ], 
+        validarJWT,
+        check('nombre', 'El nombre del hospital es obligatorio').notEmpty(),
+        validarCampos,
+    ],
     putHospitales 
 )
 
-router.delete( '/', validarJWT, deleteHospitales)
+router.delete( '/:id', validarJWT, deleteHospitales)
 
 
 

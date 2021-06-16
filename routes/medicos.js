@@ -25,14 +25,17 @@ router.post( '/',
     postMedicos 
 )
 
-router.put( '/', 
+router.put( '/:id', 
     [
-        
+        validarJWT,
+        check('nombre', 'El nombre es obligatorio').notEmpty(),
+        check('hospital', 'El hospital id debe ser válido').isMongoId(),
+        validarCampos,
     ], 
     putMedicos 
 )
 
-router.delete( '/', validarJWT, deleteMedicos)
+router.delete( '/:id', validarJWT, deleteMedicos)
 
 
 

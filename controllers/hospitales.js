@@ -38,18 +38,71 @@ const postHospitales = async (req, res) => {
 
 const putHospitales = async (req, res) => {
 
-    res.json({
-        ok: true,
-        msg: "Hospital actualizado"
-    })
+    const id = req.params.id
+    const uid = req.uid
+    try {
+
+        const hospital  = await Hospital.findById(id)
+
+        if(!hospital){
+            return res.status(404).json({
+                ok: false,
+                msg: "El hospital no existe"
+            })
+        }
+        
+        const cambiosHospital = {
+            ...req.body,
+            usuario: uid
+        }
+
+        // Lo del new en true es para que muestre el hospital actualizado, no el viejo
+        const hospitalActualizado = await Hospital.findByIdAndUpdate(id, cambiosHospital, {new: true})
+
+        res.json({
+            ok: true,
+            msg: "Hospital actualizado",
+            hospital: hospitalActualizado
+        })
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "Error al actualizar hospital"
+        })
+    }
 }
 
 const deleteHospitales = async (req, res) => {
 
-    res.json({
-        ok: true,
-        msg: "Hospital Eliminado"
-    })
+
+    const id = req.params.id
+    try {
+
+        const hospital  = await Hospital.findById(id)
+
+        if(!hospital){
+            return res.status(404).json({
+                ok: false,
+                msg: "El hospital no existe"
+            })
+        }
+        
+        await Hospital.findByIdAndDelete(id)
+
+        res.json({
+            ok: true,
+            msg: "Hospital eliminado"
+        })
+    } catch (error) {
+
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: "Error al eliminar hospital"
+            
+        })
+    }
+    
 }
 
 

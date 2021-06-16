@@ -10,13 +10,10 @@ const googleVerify = async ( token ) => {
 
     // El payload es toda la info que devuelve Google cuando te logueas, nombre, foto, mail...
     const payload = ticket.getPayload();
-    const userid = payload['sub'];
 
     const { name, email, picture } = payload
 
     return { name, email, picture }
-    // If request specified a G Suite domain:
-    // const domain = payload['hd'];
 }
 
 
